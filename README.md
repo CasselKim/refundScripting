@@ -10,4 +10,7 @@ automate refund script as a command
 
 ## TO-BE
 1. upload CSV files
-2. execute `python3 manage.py giverefund`
+2. execute `python3 manage.py autoRefund`
+
+## Result
+![image](main.png)  
