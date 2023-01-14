@@ -14,7 +14,7 @@ class Command(BaseCommand):
         with open(options['owner_list'][0], newline='') as f:
             reader = csv.reader(f)
             for x in reader : 
-                self.stdout.write(self.style.SUCCESS('Successfully get business_id:%s' % x))
+                #self.stdout.write(self.style.SUCCESS('Successfully get business_id:%s' % x))
                 business_ids.append(x[0])
 
         
