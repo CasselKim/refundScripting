@@ -1,32 +1,43 @@
 from django.core.management.base import BaseCommand, CommandError
 from refund.models import Master
-from random import randint
+import csv
 
 class Command(BaseCommand):
     help = 'Refund owner\'s remain account balance'
 
-    #def add_arguments(self, parser):
-    #    parser.add_argument('poll_ids', nargs='+', type=int)
+    def add_arguments(self, parser):
+        parser.add_argument('owner_list', nargs=1, type=str)
 
     def handle(self, *args, **options):
+
+        business_ids = []
+        with open(options['owner_list'][0], newline='') as f:
+            reader = csv.reader(f)
+            for x in reader : 
+                self.stdout.write(self.style.SUCCESS('Successfully get business_id:%s' % x))
+                business_ids.append(x[0])
+
         
-        '''
-        for poll_id in options['poll_ids']:
-            try:
-                poll = Poll.objects.get(pk=poll_id)
-            except Poll.DoesNotExist:
-                raise CommandError('Poll "%s" does not exist' % poll_id)
-
-            poll.opened = False
-            poll.save()
-
-            self.stdout.write(self.style.SUCCESS('Successfully closed poll "%s"' % poll_id))
-        '''
         
-        p = Master(business_id="{:03d}-{:02d}-{:04d}".format(randint(1,999),randint(1,99),randint(1,9999)), balance=randint(1,100000))
-        p.save()
-        self.stdout.write(self.style.SUCCESS('Successfully create objects "%s", %d' % (p.business_id, p.balance)))
+        #[TODO] Gather into one transaction??
+        for business_id in business_ids : 
+            try : 
+                master = Master.objects.get(business_id=business_id)
+            except : 
+                raise CommandError('business_id "%s" does not exist' % business_id)
 
+            #[TODO] Query to database and assertion check 
+            # assert(Query.result==master.balance)
+
+            before_balance = master.balance
+
+            master.balance = 0
+            master.save()
+
+            #[TODO] Query to database and assertion check 
+            # assert(Query.result==master.balance)
+
+            self.stdout.write(self.style.SUCCESS('Successfully refund "%s" "%d" -> "%d"' % (master.business_id,before_balance,master.balance)))
         
 
 
