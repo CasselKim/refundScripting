@@ -9,4 +9,5 @@ automate refund script as a command
 5. check again whether account's balance is equal to query result ( should be 0 )
 
 ## TO-BE
-1. `python3 manage.py giverefund`
+1. upload CSV files
+2. execute `python3 manage.py giverefund`
